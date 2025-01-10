@@ -1,12 +1,13 @@
-from langchain.schema import HumanMessage
-from langchain_ollama import OllamaLLM
+from modelo.llama import llm
+from template.crearPrompt import CrearPrompt
+from template.utils.normaliza_text import normalizar_texto
 
-from template import crear_prompt
+promp = CrearPrompt()
 
-llm = OllamaLLM(model="llama3.2")
+pregunta = promp.generar_prompt(
+    nombre_prompt="searchDoc", prompt_humano="Sabes quien es Antonio?"
+)
 
-prompt_template = crear_prompt("Como te llamas?")
+respuesta = llm.invoke(pregunta)
 
-respuesta = llm.invoke(prompt_template.format_prompt())
-
-print(respuesta)
+print(normalizar_texto(respuesta))
