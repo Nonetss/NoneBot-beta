@@ -15,13 +15,13 @@ prompt_sistema = (
 )
 
 
-def crear_prompt(humano: str):
+def crear_prompt(prompt_humano: str):
     """
     Genera un template de prompt con un mensaje de sistema fijo y un mensaje humano variable.
     """
     return ChatPromptTemplate(
         [
             SystemMessage(content=prompt_sistema),
-            HumanMessage(content=humano),
+            HumanMessage(content=prompt_humano),
         ]
     )
