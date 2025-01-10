@@ -36,6 +36,7 @@ class CrearPrompt:
             )
 
         prompt_sistema = self.prompts[nombre_prompt]["prompt_sistema"]
+        formateado = self.prompts[nombre_prompt].get("formateado", False)
 
         # Crear el prompt
         prompt = ChatPromptTemplate(
@@ -45,4 +46,4 @@ class CrearPrompt:
             ]
         )
 
-        return prompt.format_prompt()
+        return (prompt.format_prompt(), formateado)
