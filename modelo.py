@@ -1,15 +1,18 @@
-from modelo.llama import llm
-from template.crearPrompt import CrearPrompt
-from template.crearRespuesta import CrearRespuesta
-from template.utils.normaliza_text import normalizar_texto
+from nodos.inDoc import inDoc
+from nodos.requestFinal import requestFinal
+from nodos.searchDoc import searchDoc
+from nodos.utilDoc import utilDoc
 
-promp = CrearPrompt()
+if __name__ == "__main__":
+    pregunta = "¿Sabes como contactar con Antonio Moreno?"
+    respuesta = inDoc(pregunta)
+    print(respuesta["inDoc"])
 
-respuesta = CrearRespuesta()
+    result = searchDoc(respuesta, pregunta)
+    print(result)
 
-pregunta = promp.generar_prompt(
-    nombre_prompt="searchDoc", prompt_humano="Sabes quien es Antonio?"
-)
+    result2 = utilDoc(result, pregunta)
+    print(f"Resultado final: {result2}")
 
-
-print(respuesta.generar_respuesta(pregunta))
+    result3 = requestFinal(pregunta, result2, result)
+    print(f"Respuesta Final: {result3}")
