@@ -25,10 +25,11 @@ class CrearPrompt:
             return {}
 
     def generar_prompt(
-        self, nombre_prompt: str, prompt_humano: str
-    ) -> ChatPromptTemplate:
+        self, nombre_prompt: str, prompt_humano: str, prompt_document=""
+    ) -> tuple:
         """
         Genera un template de prompt basado en el nombre especificado en el archivo YAML.
+        Si `prompt_document` es una lista, se convertirá en una cadena.
         """
         if nombre_prompt not in self.prompts:
             raise ValueError(
@@ -38,12 +39,26 @@ class CrearPrompt:
         prompt_sistema = self.prompts[nombre_prompt]["prompt_sistema"]
         formateado = self.prompts[nombre_prompt].get("formateado", False)
 
-        # Crear el prompt
-        prompt = ChatPromptTemplate(
-            [
-                SystemMessage(content=prompt_sistema),
-                HumanMessage(content=prompt_humano),
-            ]
-        )
+        # 🔧 Transformación de lista a string si es necesario
+        if isinstance(prompt_document, list):
+            prompt_document = "\n\n".join(prompt_document)
+
+        if prompt_document == "":
+            # Crear el prompt sin documento
+            prompt = ChatPromptTemplate(
+                [
+                    SystemMessage(content=prompt_sistema),
+                    HumanMessage(content=prompt_humano),
+                ]
+            )
+        else:
+            # Crear el prompt con documento
+            prompt = ChatPromptTemplate(
+                [
+                    SystemMessage(content=prompt_sistema),
+                    SystemMessage(content=prompt_document),
+                    HumanMessage(content=prompt_humano),
+                ]
+            )
 
         return (prompt.format_prompt(), formateado)
